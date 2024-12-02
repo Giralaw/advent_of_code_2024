@@ -19,6 +19,7 @@ p1 = 0
 p2 = 0
 
 for line in lines:
+    words = line.split()
     pass
 
 print('p1 is ', p1)

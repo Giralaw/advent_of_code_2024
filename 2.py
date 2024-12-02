@@ -19,7 +19,43 @@ p1 = 0
 p2 = 0
 
 for line in lines:
-    pass
+
+    safe = 1
+    words = line.split()
+    words = [int(word) for word in words]
+
+    if True:
+
+        # tolerances
+        # set to 0 to get part 1
+
+        # omg i'd initialize the safe = 1 flag here when i needed to do it inside the for loop
+        tol = 1
+
+        for i in range(len(words)):
+            safe = 1
+            words_tol = words[:i] + words[i+tol:]
+            print(words_tol)
+
+            if not(words_tol == sorted(words_tol) or words_tol == sorted(words_tol,reverse=True)):
+                print("wrongie", words_tol)
+                safe = 0
+            for j in range(len(words_tol)-1):
+                diff = abs(words_tol[j+1] - words_tol[j])
+                if not(0 < diff < 4):
+                    print(words_tol)
+                    safe = 0
+            if safe == 1:
+                break
+                
+        if safe == 1:
+            p2 += 1
+            
+            # print("safe:", line)
+        else:
+            print("unsafe:", line)
+
+
 
 print('p1 is ', p1)
 print('p2 is ', p2)
