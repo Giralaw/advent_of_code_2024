@@ -18,9 +18,17 @@ lines = data.split('\n')
 p1 = 0
 p2 = 0
 
+# this option assumes each line should be treated separately
 for line in lines:
     words = line.split()
     pass
+
+# if you want input file to be one long string instead, use this and comment prev section
+#''.join(lines)
+
+for line in lines:
+    pass
+
 
 print('p1 is ', p1)
 print('p2 is ', p2)
