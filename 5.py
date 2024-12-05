@@ -44,17 +44,24 @@ for line in pages:
     for a in pairs:
         if (a[1],a[0]) in instr:
             ok = False
+
+    # part 1
     if ok == True:
         length = len(words)
         p1 += int(words[length//2])
         corr += 1
 
+    # part 2
     else:
         incorr += 1
         fix = deepcopy(words)
+        
         while(ok == False):
             ok = True
+
             for a in pairs:
+
+                # rule violation, need to swap elements
                 if (a[1],a[0]) in instr:
                     tmp1 = fix.index(a[1])
                     tmp2 = fix.index(a[0])
@@ -68,6 +75,9 @@ for line in pages:
             pairs = []
 
             # O(n^3), could probably be better with a hash map or some other clever data structure
+
+            # wipes pairs list clean each time we perform a swap, and remakes list from scratch
+            # defaulted to conceptual simplicity on this one
             for i in range(len(words)):
                 for j in range(i+1, len(words)):
                     pairs.append((fix[i],fix[j]))
