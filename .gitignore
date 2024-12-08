@@ -1,3 +1,4 @@
 *.in
 *.ex
 __pycache__/
+*.out
