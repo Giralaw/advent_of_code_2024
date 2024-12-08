@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-# Advent of Code 2024 Day _
+# Advent of Code 2024 Day 7
 
 dirs1 = [(-1,1),(1,1),(1,-1),(-1,-1)]
 
@@ -13,7 +13,7 @@ import functools
 from aoc_tools import *
 from statistics import mode, multimode
 
-data = open('.in').read().strip()
+data = open('7.in').read().strip()
 lines = data.split('\n')
 
 p1 = 0
