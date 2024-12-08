@@ -10,7 +10,7 @@ import string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
-from aoc_tools import *
+# from aoc_tools import *
 from statistics import mode, multimode
 
 data = open('7.in').read().strip()
@@ -21,13 +21,52 @@ p2 = 0
 
 # this option assumes each line should be treated separately
 for line in lines:
-    words = line.split()
-    pass
+    G = line.split()
+    test = int(G[0][:-1])
+    vals = [int(s) for s in G[1:]]
 
-# if you want input file to be one long string instead, use this and comment prev section
-#''.join(lines)
+    opts = len(vals)
+    tots = deque()
+    tots.append(vals[0])
 
-for line in lines:
+    i = 1
+    while i < len(vals):
+        j = 0
+        while j < 2**(i-1):
+            curr = tots.popleft()
+            tots.append(curr+vals[i])
+            tots.append(curr*vals[i])
+            j += 1
+        i += 1
+
+    if test in tots:
+        p1 += test
+
+    # part 2 - include concatenate operator
+    # smooooth
+
+    tots = deque()
+    tots.append(vals[0])
+    i = 1
+
+    while i < len(vals):
+        j = 0
+        while j < 3**(i-1):
+
+            #print(tots)
+
+            curr = tots.popleft()
+            tots.append(curr+vals[i])
+            tots.append(curr*vals[i])
+            digs = len(str(vals[i]))
+            tots.append(curr*(10**digs)+vals[i])
+            j += 1
+
+        i += 1
+
+    if test in tots:
+        print(test)
+        p2 += test
     pass
 
 

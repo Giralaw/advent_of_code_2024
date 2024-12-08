@@ -9,8 +9,10 @@ import string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
-from aoc_tools import *
+# from aoc_tools import *
 from statistics import mode, multimode
+
+start = time.time()
 
 data = open('5.in').read().strip()
 rules, pages = data.split('\n\n')
@@ -87,12 +89,14 @@ for line in pages:
             fixed += 1
 
             length = len(words)
-            print(int(fix[length//2]))
+            #print(int(fix[length//2]))
             p2 += int(fix[length//2])
 
 # if you want input file to be one long string instead, use this and comment prev section
 #''.join(lines)
 
+stop = time.time() - start
+print('time taken is', stop)
 print(corr, incorr, fixed)
 print('p1 is ', p1)
 print('p2 is ', p2)
