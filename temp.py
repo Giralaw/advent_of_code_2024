@@ -14,7 +14,7 @@ import functools
 from statistics import mode, multimode
 
 data = open('.in').read().strip()
-L = data.split('\n')
+G = data.split('\n')
 
 p1 = 0
 p2 = 0

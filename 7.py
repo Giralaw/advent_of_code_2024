@@ -19,7 +19,6 @@ lines = data.split('\n')
 p1 = 0
 p2 = 0
 
-# this option assumes each line should be treated separately
 for line in lines:
     G = line.split()
     test = int(G[0][:-1])
