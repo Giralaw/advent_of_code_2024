@@ -24,14 +24,6 @@ G = data.split('\n')
 
 p1,p2 = 0
 
-# this option assumes each line should be treated separately
-for line in G:
-    words = line.split()
-    pass
-
-# if you want input file to be one long string instead, use this and comment prev section
-#''.join(lines)
-
 for line in G:
     pass
 
