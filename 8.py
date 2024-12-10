@@ -112,20 +112,19 @@ for k,v in freq.items():
 
 p2 = len(nds)
 
-G = [list(s) for s in G]
-for r in range(R):
-    for c in range(C):
-        a = G[r][c]
-        if (r,c) in nds and a == '.':
-            G[r][c] = "#"
-for r in G:
-    print("".join(map(str, r)))
+
+# grid visualization
+
+# G = [list(s) for s in G]
+# for r in range(R):
+#     for c in range(C):
+#         a = G[r][c]
+#         if (r,c) in nds and a == '.':
+#             G[r][c] = "#"
+# for r in G:
+#     print("".join(map(str, r)))
 
 
-
-    
-# print(freq)
-#print("locations are", nds)
 
 print('p1 is ', p1)
 print('p2 is ', p2)

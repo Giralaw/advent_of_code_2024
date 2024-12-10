@@ -64,7 +64,7 @@ for line in lines:
         i += 1
 
     if test in tots:
-        print(test)
+        #print(test)
         p2 += test
     pass
 

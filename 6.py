@@ -10,7 +10,7 @@ import string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
-from aoc_tools import *
+# from aoc_tools import *
 from statistics import mode, multimode
 
 data = open('6.in').read().strip()
