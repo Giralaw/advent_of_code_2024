@@ -65,10 +65,10 @@ def rolling_window(
 # oh well i guess
 #nums_regex = regex.compile("([^\\d]*)((?P<nums>\\d+)([^\\d]*))*")
 
-def nums(s):
-    m = nums_regex.match(s)
-    vals = m.capturesdict()["nums"]
-    return [int(x) for x in vals]
+# def nums(s):
+#     m = nums_regex.match(s)
+#     vals = m.capturesdict()["nums"]
+#     return [int(x) for x in vals]
 
 def nums(s):
     m = re.findall("-?\d+", s)

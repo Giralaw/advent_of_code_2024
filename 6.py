@@ -67,6 +67,9 @@ for row in grid:
 # (will check out others' solns and figure out what the more streamlined
 # approaches were)
 
+# ok turns out everyone did it this way but mine was just disgustingly slow due to sheer
+# bulk. So need to work on that.
+
 # check all X substitutions for a repeated pos, dir combo against a list of previous (pos,dir), that is, "ors"
 
 print('part 2 start')

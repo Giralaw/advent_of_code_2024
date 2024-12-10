@@ -10,14 +10,16 @@ dirs2 = [(-1,0),(0,1),(1,0),(0,-1)]
 # list-of-lists grid (i.e. (0,0) is top left corner)
 adj8 = [(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1)]
 
-import string, math, time, re, itertools, numpy as np
+import sys, string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
 from aoc_tools import *
 from statistics import mode, multimode
 
-data = open('.in').read().strip()
+infile = sys.argv[1] if len(sys.argv)>=2 else '.in'
+
+data = open(infile).read().strip()
 G = data.split('\n')
 
 p1 = 0
