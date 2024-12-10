@@ -10,7 +10,7 @@ import string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
-# from aoc_tools import *
+from aoc_tools import *
 from statistics import mode, multimode
 
 data = open('7.in').read().strip()
@@ -18,6 +18,7 @@ lines = data.split('\n')
 
 p1 = 0
 p2 = 0
+
 
 for line in lines:
     G = line.split()

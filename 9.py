@@ -10,7 +10,7 @@ import string, math, time, re, itertools, numpy as np
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
-#from aoc_tools import * # regex module doesn't work with pypy
+from aoc_tools import *
 from statistics import mode, multimode
 
 data = open('9.in').read().strip()
@@ -82,11 +82,11 @@ while blk > 0:
 
 
 # visualization array for debugging
-tot = 0
-for a in ref:
-    tot += a
+# tot = 0
+# for a in ref:
+#     tot += a
 
-vis = ['.' for _ in range(tot)]
+# vis = ['.' for _ in range(tot)]
 
 sz = len(G)
 id_f = (len(G)-1)//2
@@ -120,7 +120,7 @@ while id_f > 0:
             G[j] = 0
 
             while blk > 0:
-                vis[pos] = str(id_f)
+                # vis[pos] = str(id_f)
                 p2 += pos*id_f
                 pos += 1
                 blk -= 1
@@ -154,7 +154,7 @@ while i < sz-1:
     if curr == 0:
         pos += ref[i]
     while curr > 0:
-        vis[pos] = str(id_i)
+        # vis[pos] = str(id_i)
         p2 += pos*id_i
         pos += 1
 
@@ -165,7 +165,10 @@ while i < sz-1:
     pos += ref[i+1]
     i += 2
 
-print("".join(vis))
+
+# in retrospect the fact that the visualization worked when I ran it the final time
+# means i probably could've done this the simpler brute force way of generating the entire array with the ID's in each spot.
+# print("".join(vis))
 
 print('p1 is ', p1)
 print('p2 is ', p2)
