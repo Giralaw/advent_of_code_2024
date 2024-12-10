@@ -27,7 +27,6 @@ G = data.split('\n')
 
 G = [[int(r) for r in c] for c in G]
 
-#print(G)
 
 R = len(G)
 C = len(G[0])
@@ -35,42 +34,26 @@ C = len(G[0])
 p1 = 0
 p2 = 0
 
-
-A = set()
-def score_p1(sr,sc, val):
-    global A
-    if val == 0:
-        A = set()
-
-    if val == 9:
-        A.add((sr,sc))
-
-    for (dr,dc) in dirs2:
-        if (0 <= sr+dr < R) and (0 <= sc + dc < C):
-            if G[sr+dr][sc+dc] == val + 1:
-
-                score_p1(sr+dr,sc+dc, val+1)
-
-    if val == 0:
-        return len(A)
-    
-# misread instructions and did the p2 problem instead, so had some ctrl-zing to figure out
-# best way to get back to p2 soln without losing p1.
 def score_p2(sr,sc, val):
+    #print(sr,sc)
     tot = 0
     if val == 9:
         return 1
     for (dr,dc) in dirs2:
+        #print(val,"moving",sr+dr,sc+dc)
         if (0 <= sr+dr < R) and (0 <= sc + dc < C):
             if G[sr+dr][sc+dc] == val + 1:
-                tot += score_p2(sr+dr,sc+dc, val+1)
+                #print("newpos:", val, sr+dr,sc+dc)
+                tot += score(sr+dr,sc+dc, val+1)
+                #print(tot)
     return tot
 
 for rr in range(R):
     for cc in range(C):
         if G[rr][cc] == 0:
-            p1 += score_p1(rr,cc, 0)
-            p2 += score_p2(rr,cc, 0)
+            add = score(rr,cc, 0)
+            print(rr,cc,add)
+            p1 += add
 
 
 print('p1 is ', p1)

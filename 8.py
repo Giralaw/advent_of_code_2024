@@ -16,8 +16,7 @@ from statistics import mode, multimode
 data = open('8.in').read().strip()
 G = data.split('\n')
 
-p1 = 0
-p2 = 0
+p1,p2 = 0
 
 # this option assumes each line should be treated separately
 
