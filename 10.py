@@ -20,7 +20,8 @@ from statistics import mode, multimode
 sys.setrecursionlimit(10**6)
 
 infile = sys.argv[1] if len(sys.argv)>=2 else '10.in'
-p1, p2 = 0
+p1 = 0
+p2 = 0
 
 data = open(infile).read().strip()
 G = data.split('\n')
