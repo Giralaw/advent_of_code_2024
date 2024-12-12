@@ -57,5 +57,5 @@ print('p2 is ', p2)
 # (x,75) value as 1
 
 # I knew what I needed roughly, but doubted how
-# powerful it was and thought there needed
-# to be some math trick as well. I'll call this a partial success.
+# powerful it was and wasted time thinking there needed
+# to be some math/cycle trick as well. I'll call this a partial success.
