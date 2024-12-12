@@ -36,28 +36,16 @@ for r in range(R):
             curr = set([(r,c)])
 
             while curr:
-                (rr,cc) = curr.pop()
-                seen.add((rr,cc))
-                if rr > 0:
-                    if G[rr-1][cc] == G[rr][cc] and (rr-1,cc) not in seen:
-                        seen.add((rr-1,cc))
-                        curr.add((rr-1,cc))
-                        plots[(r,c)].append((rr-1,cc))
-                if cc > 0:
-                    if G[rr][cc-1] == G[rr][cc] and (rr,cc-1) not in seen:
-                        seen.add((rr,cc-1))
-                        curr.add((rr,cc-1))
-                        plots[(r,c)].append((rr,cc-1))
-                if rr < R-1:
-                    if G[rr+1][cc] == G[rr][cc] and (rr+1,cc) not in seen:
-                        seen.add((rr+1,cc))
-                        curr.add((rr+1,cc))
-                        plots[(r,c)].append((rr+1,cc))
-                if cc < C-1:
-                    if G[rr][cc+1] == G[rr][cc] and (rr,cc+1) not in seen:
-                        seen.add((rr,cc+1))
-                        curr.add((rr,cc+1))
-                        plots[(r,c)].append((rr,cc+1))
+                (r2,c2) = curr.pop()
+                seen.add((r2,c2))
+                for (dr,dc) in dirs2:
+                    rr = r2+dr
+                    cc = c2+ dc
+                    if 0 <= rr < R and 0 <= cc < C:
+                        if G[r][c] == G[rr][cc] and (rr,cc) not in seen:
+                            seen.add((rr,cc))
+                            curr.add((rr,cc))
+                            plots[(r,c)].append((rr,cc))
     pass
 
 # part 1 calc now we have the regions
@@ -69,38 +57,22 @@ def side(r,c,grp):
     # so there is sort of a symmetry here, just the diagonal term point doesn't matter if the adjacent one isn't in the group
 
     side = 0
-    if (r-1,c) not in grp and (r,c+1) not in grp:
-        side += 1
-    if (r,c+1) not in grp and (r+1,c) not in grp:
-        side += 1
-    if (r+1,c) not in grp and (r,c-1) not in grp:
-        side += 1
-    if (r,c-1) not in grp and (r-1,c) not in grp:
-        side += 1
-
-    if (r-1,c) not in grp and (r,c+1) in grp and (r-1,c+1) in grp:
-        side += 1
-    if (r,c+1) not in grp and (r+1,c) in grp and (r+1,c+1)  in grp:
-        side += 1
-    if (r+1,c) not in grp and (r,c-1) in grp and (r+1,c-1) in grp:
-        side += 1
-    if (r,c-1) not in grp and (r-1,c) in grp and (r+-1,c-1) in grp:
-        side += 1
+    for (dr,dc) in dirs1:
+        if (r+dr,c) not in grp and (r,c+dc) not in grp:
+            side += 1
+        if (r+dr,c) not in grp and (r,c+dc) in grp and (r+dr,c+dc) in grp:
+            side += 1
     return side
-
 
 for k,v in plots.items():
     per = 0
     sides = 0
     for (r,c) in v:
-        if (r-1,c) not in v:
-            per += 1
-        if (r, c-1) not in v:
-            per += 1
-        if (r+1,c) not in v:
-            per += 1
-        if (r,c+1) not in v:
-            per += 1
+        for (dr,dc) in dirs2:
+            rr = r+dr
+            cc = c+dc
+            if (rr,cc) not in v:
+                per += 1
 
         a = side(r,c,v)
         if a > 0:
