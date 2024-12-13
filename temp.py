@@ -20,10 +20,12 @@ infile = sys.argv[1] if len(sys.argv)>=2 else '.in'
 p1 = 0
 p2 = 0
 
-data = open(infile).read().strip()
-G = data.split('\n')
+S = open(infile).read().strip()
+#grid conditions
+G = S.split('\n')
+R,C = len(G),len(G[0])
 
-for line in G:
+for line in S.split('\n'):
     pass
 
 print('p1 is ', p1)

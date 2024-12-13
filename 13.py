@@ -25,41 +25,49 @@ data = open(infile).read().strip()
 G = data.split('\n\n')
     
 def solve(ax,ay,bx,by,zx,zy):
-    gl = Matrix([
-        [zx],
-        [zy]])
-    mat = Matrix([
-        [ax,bx],
-        [ay,by]
-    ])
-    sol = mat.LUsolve(gl)
 
-    if all(v.is_Integer for v in sol):
-        return 3*sol[0]+sol[1]
-    else:
-        return 0
-    
-    # numpy formulation; couldn't figure out how to get the accuracy
-    # on the big scientific notation numbers good enough to check if they
-    # were integers, so had to use sympy instead
-
-    # gl2 = np.array([
-    # [zx],
-    # [zy]])
-    # mat2 = np.array([
+    # sympy formulation
+    # gl = Matrix([
+    #     [zx],
+    #     [zy]])
+    # mat = Matrix([
     #     [ax,bx],
     #     [ay,by]
     # ])
-    # inv = np.linalg.inv(mat2)
-    # inp = np.matmul(inv,gl2)
-    # eff_int = np.all(np.isclose(inp, np.round(inp), rtol = 1e-13))
-    # if eff_int:
-    #     inp =(int(inp[0,0]),int(inp[1,0]))
-    #     return 3*inp[0]+inp[1]
+    # sol = mat.LUsolve(gl)
+
+    # if all(v.is_Integer for v in sol):
+    #     return 3*sol[0]+sol[1]
     # else:
     #     return 0
+    
+    # numpy formulation; couldn't figure out how to get the accuracy
+    # on the big scientific notation numbers good enough to check if they
+    # were integers, so had to use sympy instead when first solving.
+    # realized i needed to use round() and also add a tol check
+    # so I'll put this as my final method since numpy stuff is more basic/ubiquitous
+
+    gl2 = np.array([
+    [zx],
+    [zy]])
+    mat2 = np.array([
+        [ax,bx],
+        [ay,by]
+    ])
+    inv = np.linalg.solve(mat2, gl2)
+
+    tol = 1e-2
+    dx = abs(inv[0,0]-round(inv[0,0]))
+    dy = abs(inv[1,0] - round(inv[1,0]))
+
+    if dx < tol and dy < tol:
+        inp =(round(inv[0,0]),round(inv[1,0]))
+        return 3*inp[0]+inp[1]
+    else:
+        return 0
 
 for line in G:
+    # should've used the nums() function from nthistle's aoc tools
     a,b,c = line.split('\n')
     a = a.split()
     b = b.split()
@@ -69,11 +77,9 @@ for line in G:
     przx, przy = int(c[1][2:-1]),int(c[2][2:])
 
     tkn = 0
-    ok = False
     for i in range(100):
         for j in range(100):
             if (i*ax+j*bx,i*ay+j*by) == (przx,przy):
-                ok = True
                 newtkn = 3*i + j
                 if newtkn < tkn or tkn == 0:
                     tkn = newtkn
