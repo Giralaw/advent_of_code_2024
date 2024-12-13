@@ -33,6 +33,10 @@ for r in range(R):
         if (r,c) not in seen:
             # should find all members of a plot before moving on
             plots[(r,c)] = [(r,c)]
+            
+            # could have just as well could have used a deque here
+            # to do BFS (I originally did, but kept messing up syntax
+            # so I just switched to a set)
             curr = set([(r,c)])
 
             while curr:
