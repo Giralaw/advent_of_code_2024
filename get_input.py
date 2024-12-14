@@ -25,7 +25,7 @@ SESSION = '53616c7465645f5f9f93395a1175872ddaee7036a348e4573e9874a72cb0dc789bf73
 useragent = 'https://github.com/jonathanpaulson/AdventOfCode/blob/master/get_input.py by jonathanpaulson@gmail.com'
 parser = argparse.ArgumentParser(description='Read input')
 parser.add_argument('--year', type=int, default=2024)
-parser.add_argument('--day', type=int, default=13)
+parser.add_argument('--day', type=int, default=14)
 args = parser.parse_args()
 
 cmd = f'curl https://adventofcode.com/{args.year}/day/{args.day}/input --cookie "session={SESSION}"' #-A {useragent} commented out

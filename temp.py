@@ -9,6 +9,7 @@ dirs2 = [(-1,0),(0,1),(1,0),(0,-1)]
 adj8 = [(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1)]
 
 import sys, string, math, time, re, itertools, numpy as np
+from sympy import Matrix
 from copy import deepcopy
 from collections import defaultdict, deque
 import functools
