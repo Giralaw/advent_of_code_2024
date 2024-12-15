@@ -2,4 +2,3 @@
 *.ex
 __pycache__/
 *.out
-get_input.py
