@@ -21,6 +21,7 @@ infile = sys.argv[1] if len(sys.argv)>=2 else '15.in'
 p1 = 0
 p2 = 0
 
+
 S = open(infile).read().strip()
 #grid conditions
 G,rls = S.split('\n\n')
@@ -31,16 +32,19 @@ R,C = len(G), len(G[0])
 cd = {">": (0,1), "v": (1,0), "<": (0,-1), "^": (-1,0)}
 rls = ''.join(rls.split('\n'))
 
-def solve(A,part2):
-    G = deepcopy(A)
+def solve(G,part2):
     ans = 0
     R, C = len(G), len(G[0])
-
+    # interestingly, this makes it so the global G is not modified;
+    # otherwise part 2 comes out incorrect
+    G = deepcopy(G)
+    
     # make big grid, adjust C
     if part2:
-        bg = deepcopy(G)
+        #bg = deepcopy(G)
+        bg = []
         for r in range(R):
-            bg[r] = []
+            bg.append([])
             for c in range(C):
                 if G[r][c] == "#":
                     bg[r].append("##")
