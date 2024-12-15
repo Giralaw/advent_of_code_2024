@@ -28,104 +28,92 @@ G= G.split('\n')
 G = [list(s) for s in G]
 R,C = len(G), len(G[0])
 
-for r in range(R):
-    for c in range(C):
-        if G[r][c] == "@":
-            px, py = r,c
-print(px,py)
-
 cd = {">": (0,1), "v": (1,0), "<": (0,-1), "^": (-1,0)}
 rls = ''.join(rls.split('\n'))
 
-def is_valid(G,px,py,dx,dy):
-    #print(len(G),len(G[0]))
-    #print(px,py)
-    if dx == -1:
-        for i in range(px-1,0,dx):
-            M[py][i] = G[py][i+1]
-            a = G[py][i]
-            if a == '.':
-                return True
-            if a == '#':
-                return False
-    if dy == -1:
-        for i in range(py-1,0,dy):
-            M[i][px] = G[i+1][px]
-            a = G[i][px]
-            if a == '.':
-                return True
-            if a == '#':
-                return False
-    if dx == 1:
-        for i in range(px+1,C-1,dx):
-            M[py][i] = G[py][i-1]
-            a = G[py][i]
-            if a == '.':
-                return True
-            if a == '#':
-                return False
-    if dy == 1:
-        for i in range(py+1,R-1,dy):
-            #print(len(G),len(G[0]))
-            #print(px,i)
-            M[i][px] = G[i-1][px]
-            a = G[i][px]
-            if a == '.':
-                return True
-            if a == "#":
-                return False
-    return False
+def solve(A,part2):
+    G = deepcopy(A)
+    ans = 0
+    R, C = len(G), len(G[0])
 
-def pr(G):
+    # make big grid, adjust C
+    if part2:
+        bg = deepcopy(G)
+        for r in range(R):
+            bg[r] = []
+            for c in range(C):
+                if G[r][c] == "#":
+                    bg[r].append("##")
+                if G[r][c] == "O":
+                    bg[r].append("[]")
+                if G[r][c] == "@":
+                    bg[r].append("@.")
+                if G[r][c] == ".":
+                    bg[r].append("..")
+        C *= 2 
+        bg = [''.join(row) for row in bg]
+        bg = [[bg[i][j] for j in range(C)] for i in range(R)]
+        G = bg
+    
+    # find robot initial position
+    for r in range(R):
+        for c in range(C):
+            if G[r][c] == "@":
+                sr,sc = r,c
+    
+    # iterate through motions
+    for rl in rls:
+        ok = True
+        dr,dc = cd[rl]
+        
+        seen = deque()
+
+        gp = deque()
+        gp.append((sr,sc))
+
+        # BFS to find all boxes that will be moved
+        while gp:
+            rr,cc = gp.popleft()
+            if (rr,cc) in seen:
+                continue
+            seen.append((rr,cc))
+            
+            r2,c2= rr+dr,cc+dc
+            new = G[r2][c2]
+            if new == "O":
+                gp.append((r2,c2))
+            if new == "[":
+                gp.append((r2,c2))
+                gp.append((r2,c2+1))
+            if new == "]":
+                gp.append((r2,c2))
+                gp.append((r2,c2-1))
+            if new == "#":
+                ok = False
+                break
+            if new == ".":
+                continue
+        
+        # if ok action, move all boxes appropriately
+        if ok == True:
+            # need to do it in reverse fashion to avoid double stepping
+            #soln: change to deque
+            for (r2,c2) in reversed(seen):
+                G[r2+dr][c2+dc] = G[r2][c2]
+                G[r2][c2] = '.'
+            sr,sc = sr+dr,sc+dc
+        
+    for r in range(R):
+        for c in range(C):
+            if G[r][c] == "O" or G[r][c] == "[":
+                ans += 100*r+c
+    return ans
+
+def viz(G):
     print('\n'.join(''.join(sub) for sub in G))
-    print('')
 
-#let's try to construct our map for part 2:
-ref = deepcopy(G)
-
-bg = deepcopy(G)
-for r in range(R):
-    bg[r] = []
-    for c in range(C):
-        if G[r][c] == "#":
-            bg[r].append("##")
-        if G[r][c] == "O":
-            bg[r].append("[]")
-        if G[r][c] == "@":
-            bg[r].append("@.")
-        if G[r][c] == ".":
-            bg[r].append("..")
-bg = [list(s) for s in bg]
-
-pr(bg)
-#pr(G)
-ref = deepcopy(G)
-
-for rl in rls:
-    #print(rl)
-    #print(px,py)
-    dy,dx = cd[rl]
-    # want to march down from p_i to 0 if neg, up from p_i to R or C if pos
-    #really need to change this deepcopy thing to be more efficient
-    M = deepcopy(G)
-    #print(G)
-    if is_valid(G,px,py,dx,dy):
-        G= deepcopy(M)
-        G[py+dy][px+dx] = "@"
-        G[py][px] = "."
-        py += dy
-        px += dx
-    #pr(G)
-    
-    # part 2: bigger everything!
-    # I'm realizing we need a recursive is_valid function...
-    if is_valid(G,px,py,dx,dy
-    
-
-for r in range(R):
-    for c in range(C):
-        if G[r][c] == "O":
-            p1 += 100*r+c
+p1 = solve(G,False)
+p2 = solve(G,True)
 
 print('p1 is ', p1)
 print('p2 is ', p2)
