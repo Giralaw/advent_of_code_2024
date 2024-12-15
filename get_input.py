@@ -20,7 +20,7 @@ import pip._vendor.requests
 # 6) Grab the value for session. Fill it in.
 
 # 2024 cookies
-SESSION = '53616c7465645f5f9f93395a1175872ddaee7036a348e4573e9874a72cb0dc789bf731007aabe22252d3b05845a31f39c4a2febadf771523e375e78949a986aa'
+SESSION = '<FILL_ME_IN>'
 
 useragent = 'https://github.com/jonathanpaulson/AdventOfCode/blob/master/get_input.py by jonathanpaulson@gmail.com'
 parser = argparse.ArgumentParser(description='Read input')
