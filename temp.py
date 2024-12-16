@@ -11,6 +11,7 @@ adj8 = [(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1)]
 import sys, string, math, time, re, itertools, numpy as np
 from sympy import Matrix
 from copy import deepcopy
+import heapq
 from collections import defaultdict, deque
 import functools
 from aoc_tools import *
