@@ -31,118 +31,63 @@ G = [list(s) for s in G]
 for r in range(R):
     for c in range(C):
         if G[r][c] == 'S':
-            sr,sc = r,c
+            ir,ic = r,c
         if G[r][c] == 'E':
-            er,ec = r,c
+            fr,fc = r,c
 
 # maze nav, need modified BFS (djikstra's somehow?)
-# we'll have to weight our bfs by the number of turns, so partial sort of DFS
-seen = set()
-path = deque()
-path.append((sr,sc))
+# we'll have to weight our bfs by the number of turns
+# doing the whole search every time is expensive.
+# can we cache our values a la DP for faster compute?
 
-nds = defaultdict()
+# three DP's for three source pos,dirs
+DP1 = {}
+DP2 = {}
+DP3 = {}
+def cost(sr,sc,dir,er,ec,DP):
+    p = []
+    heapq.heappush(p,(0,sr,sc,dir))
+    while p:
+        d,rr,cc,dir = heapq.heappop(p)
+        
+        if (rr,cc,dir) in DP.keys():
+            continue
+        
+        DP[(rr,cc,dir)] = d
+        dr,dc = dirs2[dir]
+        r2,c2 = rr+dr,cc+dc
+        
+        if G[r2][c2] != "#":
+            heapq.heappush(p,(d+1,r2,c2,dir))
+        heapq.heappush(p,(d+1000,rr,cc,(dir+1)%4))
+        heapq.heappush(p,(d+1000,rr,cc,(dir+3)%4))
+    
+    return 0
 
-#print((sr,sc),(er,ec))
-while path:
-    found = False
-    rr,cc = path.popleft()
+# part 2: for each point in the graph, we want to compute the best score
+# to get there from start, add best score to get to fin,
+# and if that's equal to the prev best from part 1 then we add that point
 
-    if (rr,cc) == (er,ec):
-        found = True
-        break
+# we fill three dicts; we know S starts east,
+# and because E is a corner we can specify it to be west or south
+cost(ir,ic,1,fr,fc,DP1)
+cost(fr,fc,2,ir,ic,DP2)
+cost(fr,fc,3,ir,ic,DP3)
 
-    seen.add((rr,cc))
-   
-   
-    # now we add intersections that aren't necessarily T's or L's in lower priority
-    for (dr,dc) in dirs2:
-        r2,c2 = rr, cc
-        r3,c3 = rr,cc
-        while G[r2][c2] != '#':
-            
-            r2 += dr
-            c2 += dc
-            for (rrr,ccc) in ((r2-dc,c2-dr),(r2+dc,c2+dr)):
-                if G[rrr][ccc] == "." and (r2,c2) not in seen:
-                    #print('opt 3: adding',(r2,c2))
-                    path.append((r2,c2))
-                    seen.add((r2,c2))
-                    nds[(r2,c2)] = (rr,cc)
-    for (dr,dc) in dirs2:
-        while G[r3][c3] != "#":
-            r3 -= dr
-            c3 -= dc
-            for (rrr,ccc) in ((r3-dc,c3-dr),(r3+dc,c3+dr)):
-                if G[rrr][ccc] == "." and (r3,c3) not in seen:
-                    #print('opt 4: adding',(r3,c3))
-                    path.append((r3,c3))                       
-                    seen.add((r3,c3))
-                    nds[(r3,c3)] = (rr,cc)
+# we don't care what direction we reach E with
+p1 = min(DP1[(fr,fc,dir)] for dir in range(4))
 
-    for (dr,dc) in dirs2:
-        #print(rr,cc,(dr,dc))
-        r2,c2 = rr,cc
-
-        # need to account for intersections
-        while G[r2][c2] !=  "#":
-            r2 += dr
-            c2 += dc
-        if (r2-dr,c2-dc) not in seen:
-            #print('opt 1: adding',(r2-dr,c2-dc))
-            path.append((r2-dr,c2-dc))
-            seen.add((r2-dr,c2-dc))
-            nds[(r2-dr,c2-dc)] = (rr,cc)
-     
-    for (dr,dc) in dirs2:
-        #print(rr,cc,(dr,dc))
-        r2,c2 = rr,cc
-
-        # need to account for intersections
-        while G[r2][c2] !=  "#":
-            r2 -= dr
-            c2 -= dc
-        if (r2+dr,c2+dc) not in seen:
-            #print('opt 2: adding',(r2+dr,c2+dc))
-            path.append((r2+dr,c2+dc))
-            seen.add((r2+dr,c2+dc))
-            nds[(r2+dr,c2+dc)] = (rr,cc)
-            
-    if found:
-        break
-# 
-# for r in range(R):
-#     for c in range(C):
-#         if (r,c) in seen:
-#             print('O',end='')
-#         else:
-#             print(G[r][c],end='')
-#     print('')
-# # now need to retrieve path and number of turns
-pos = (er,ec)
-
-corr = []
-corr.append((er,ec))
-sz = 1
-
-while pos != (sr,sc):
-    #print(pos, nds[pos])
-    posnew = nds[pos]
-    corr.append(posnew)
-    diff = abs(posnew[1]-pos[1]) +abs(posnew[0] - pos[0])
-    p1 += diff
-    p1 += 1000
-    sz += 1
-    pos = posnew
-#print(sz)
-#for r in range(R):
-#    for c in range(C):
-#        if (r,c) in corr:
-#            print('O',end='')
-#        else:
-#            print(G[r][c],end='')
-#    print('')
-
+for r in range(R):
+    for c in range(C):
+        if G[r][c] != "#":
+            for dir in range(4):
+                # consider each path from the end going west or south,
+                # take cheaper option
+                # if that combined path is as cheap as p1,
+                # that point is on a best path
+                if DP1[(r,c,dir)] + min(DP2[(r,c,(dir+2)%4)],DP3[(r,c,(dir+2)%4)]) == p1:
+                    p2 += 1
+                    break
 
 print('p1 is ', p1)
 print('p2 is ', p2)

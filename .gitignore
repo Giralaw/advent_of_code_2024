@@ -1,5 +1,5 @@
 *.in
-*.ex
+*.ex*
 __pycache__/
 *.out
 *.swp
