@@ -26,6 +26,7 @@ S = open(infile).read().strip()
 #grid conditions
 G = S.split('\n')
 R,C = len(G),len(G[0])
+G = [[G[r]c] for r in range(r)] for c in range(C)]
 
 for line in S.split('\n'):
     pass
