@@ -24,15 +24,19 @@ p2 = 0
 
 S = open(infile).read().strip()
 #grid conditions
-G = S.split('\n')
-R,C = len(G),len(G[0])
 
 reg,prog = S.split('\n\n')
 vals = nums(reg)
 A,B,C = vals
 prog = nums(prog)
 
-i = 0
+
+#this script is a hardcoded instances of the general computer design
+#because I thought that might lead to a notable speedup.
+# it doesn't; that's not how time complexity works
+# both programs take ~2 seconds
+# the full day 17 solution is found in 17.py
+
 
 # A must be greater than or equal to 8**15
 # and less than 8**16
@@ -48,11 +52,6 @@ guess = 8**15
 while guess < 8**16:
     A = guess
     out = []
-    
-    #hardcoded instances of the general computer design
-    #because I thought that might lead to a notable speedup.
-    # it doesn't; that's not how time complexity works
-    # both programs take ~2 seconds
     while A != 0:
         B = A % 8
         B = int(bin(B),2) ^ int(bin(2),2)
