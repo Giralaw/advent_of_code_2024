@@ -39,9 +39,13 @@ i = 0
 
 # got p2 working on a streamlined version,
 # now will try to do it here
-guess = 8**15
+#guess = 8**15
+
+#using 1 to rely on fewer assumptions
+guess = 1
 
 p1_solved = False
+sz = len(prog)
 while guess < 8**16:
     A,B,C = vals
     A = guess
@@ -52,7 +56,7 @@ while guess < 8**16:
         A = vals[0]
     while True:
         
-        if i > len(prog)-1:
+        if i > sz-1:
             break
         
         opc = prog[i]
@@ -69,9 +73,10 @@ while guess < 8**16:
         
         if opc == 0:
             A = A//(2**(arg))
-        # int second arg gives base
+        # turns out bitwise operations work on ints
+        # i.e. convert to binary automatically
         if opc == 1:
-            B = int(bin(B),2) ^ int(bin(inp),2)
+            B = B ^ inp
         if opc == 2:
             B = arg % 8
         if opc == 3:
@@ -81,7 +86,7 @@ while guess < 8**16:
                 i = inp
                 continue
         if opc == 4:
-            B = int(bin(B),2) ^ int(bin(C),2)
+            B = B ^ C
         if opc == 5:
             out.append(arg % 8)
         if opc == 6:
@@ -100,22 +105,24 @@ while guess < 8**16:
             print('found a solution:',guess,'\n')
             p2 = guess
             break
-
+        
+        # this timestepping scheme doesn't work
+        # for the example input, so it's not super general, but oh well
         match = 0
         for i,ch in enumerate(out):
             if out[i:] == prog[i:]:
                 match += 1
-        if match >= 12:
+        if match >= sz-4:
             dx = 1
         #print('guess:', guess, match)
         #print(out)
         
-        if match < 13:
+        if match < sz-3:
             # originally had a +1 in dx terms in case of patterns
             # to make "less" composite, but
             # due to the nature of descending significance of digits,
             # I think that was unnecessary
-            dx = 8**(12-match)
+            dx = 8**(sz-4-match)
         guess += dx
 
 if guess >= 8**16:
