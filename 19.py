@@ -58,6 +58,9 @@ def is_valid(gl):
 # to be preconfigured before running num_ways()
 
 # p2 -- count number of combinations for each option
+# added some extra lines so this handles is_valid()'s
+# functionality as well
+
 goodways = defaultdict()
 def num_ways(gl):
     tot = 0
@@ -70,16 +73,31 @@ def num_ways(gl):
             return 1
         for i in range(len(gl)+1):
             if gl[:i] in avail:
-                tot += num_ways(gl[i:])
-        goodways[gl] = tot
+                tot +=  num_ways(gl[i:])
+        if tot > 0:
+            good.add(gl)
+            goodways[gl] = tot
+        else:
+            bad.add(gl)
         return tot
 
-for opt in des:
-    if is_valid(opt):
-        p1 += 1
 
-for opt in des:
-    p2 += num_ways(opt)
+# these take like, the exact same amount of time
+# this way computes the three datasets within num_ways()
+way1 = True
+if way1:    
+    for opt in des:
+        a = num_ways(opt)
+        if opt in goodways.keys():
+            p1 += 1
+            p2 += a
+else:
+# this way uses the first function
+    p1,p2 = 0,0
+    for opt in des:
+        if is_valid(opt):
+            p1 += 1
+        p2 += num_ways(opt)
 
 print('p1 is ', p1)
 print('p2 is ', p2)
