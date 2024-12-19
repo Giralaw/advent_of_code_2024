@@ -1,0 +1,87 @@
+#! /usr/bin/env python3
+
+# Advent of Code 2024 Day 19
+
+dirs1 = [(-1,1),(1,1),(1,-1),(-1,-1)]
+dirs2 = [(-1,0),(0,1),(1,0),(0,-1)]
+# neighbor directions ordered to go clockwise start from right in a
+# list-of-lists grid (i.e. (0,0) is top left corner)
+adj8 = [(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1),(-1,0),(-1,1)]
+
+import sys, string, math, time, re, itertools, numpy as np
+from sympy import Matrix
+from copy import deepcopy
+import heapq
+from collections import defaultdict, deque
+import functools
+from aoc_tools import *
+from statistics import mode, multimode
+sys.setrecursionlimit(10**6)
+
+infile = sys.argv[1] if len(sys.argv)>=2 else '19.in'
+p1 = 0
+p2 = 0
+
+S = open(infile).read().strip()
+#grid conditions
+#G = S.split('\n')
+#R,C = len(G),len(G[0])
+#G = [[G[r][c] for c in range(C)] for r in range(R)]
+
+avail, des = S.split('\n\n')
+
+avail = avail.split(', ')
+#print(avail)
+des = des.split('\n')
+#print(des)
+
+#dynamic programming - check if a pattern exists, then reduce to previous problem
+
+# each one should yield number of ways
+
+good = set()
+bad = set()
+
+def is_valid(gl):
+    if gl in good.keys():
+        return True
+    elif gl in bad:
+        return False
+    if gl == "":
+        #print('hi')
+        return True
+    for i in range(len(gl)+1):
+        if gl[:i] in avail:
+            #print(gl,gl[:i],gl[i:])
+            if is_valid(gl[i:]):
+                #print('hi')
+                good.add(gl)
+                return True
+    bad.add(gl)
+    return 0
+
+goodways = defaultdict()
+def num_ways(gl):
+    tot = 0
+    if gl in bad:
+        return 0
+    if gl in goodways:
+        return goodways[gl]
+    else:
+        for i in range(len(gl)+1):
+            if gl[:i] in avail:
+                tot += num_ways(gl[:i])
+        goodways[gl] = tot
+        return tot
+# part 2 number of ways for each design
+#print(avail)
+
+for opt in des:
+    if is_valid(opt):
+        print(opt)
+        p1 += 1
+for opt in des:
+    p2 += num_ways(opt)
+#print(is_valid('brwrr'))
+print('p1 is ', p1)
+print('p2 is ', p2)

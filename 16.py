@@ -70,6 +70,7 @@ def cost(sr,sc,dir,er,ec,DP):
 
 # we fill three dicts; we know S starts east,
 # and because E is a corner we can specify it to be west or south
+
 cost(ir,ic,1,fr,fc,DP1)
 cost(fr,fc,2,ir,ic,DP2)
 cost(fr,fc,3,ir,ic,DP3)
