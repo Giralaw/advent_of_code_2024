@@ -31,6 +31,7 @@ des = des.split('\n')
 #DP/caching -- check if a pattern exists, then reduce to previous problem
 # each one should yield number of ways
 
+# should've made a defaultdict with True and False here
 good = set()
 bad = set()
 
@@ -49,7 +50,7 @@ def is_valid(gl):
                 good.add(gl)
                 return True
     bad.add(gl)
-    return 0
+    return False
 
 # need a dict to save the number of ways
 # technically could solve part 1 with this
