@@ -121,10 +121,6 @@ def get_seq3(seq):
     dr = ref[f][0]-ref[s][0]
     dc = ref[f][1]-ref[s][1]
     match s+f:
-        case 'A<':
-            out += "v<<"
-        case '<A':
-            out +=  ">>^"
         case 'Av':
             out += "<v"
         case 'vA':
@@ -158,21 +154,21 @@ def get_seq_outer(seq):
     dc = ref[f][1]-ref[s][1]
     match s+f:
         case 'A<':
-            out += "<v<"
+            out += "v<<"
         case '<A':
-            out +=  ">^>"
+            out +=  ">>^"
         case 'Av':
-            out += "<v"
+            out += "v<"
         case 'vA':
-            out += ">^"
+            out += "^>"
         case '^<':
             out += "v<"
         case '<^':
             out += ">^"
         case '^>':
-            out += "v>"
+            out += ">v"
         case '>^':
-            out += "<^"
+            out += "^<"
         case _:
             if dc > 0:
                 out += ">"*dc
@@ -182,7 +178,6 @@ def get_seq_outer(seq):
                 out += "<"*abs(dc)
             if dr < 0:
                 out += "^"*abs(dr)
-    out += "A"
     return out
 
 
@@ -211,8 +206,10 @@ DP = {}
 def cost(pair,chn,cmax):
     if (pair,chn,cmax) in DP.keys():
         return DP[pair,chn,cmax]
-    
-    temp = "A" + get_seq3(pair) + "A"
+    if chn == 2:
+        temp = "A" + get_seq3(pair) + "A"
+    else:
+        temp = "A" + get_seq3(pair) + "A"
     tot = 0
     if chn == 1:
         tot = len(temp)-1
