@@ -49,7 +49,7 @@ S = open(infile).read().strip()
 # L pr U pr UUR pr DDD pr
 # or L pr U pr RUU pr DDD pr
 # after the first layer, since you have to go to the A every time
-# order doesn't really matter, just have to avoid the corners
+
 G1 = [[7,8,9],[4,5,6],[1,2,3],["B",0,"A"]]
 G2 = [["B","^","A"],["<","v",">"]]
 
@@ -66,16 +66,10 @@ for r in range(R2):
     for c in range(C2):
         locs2[str(G2[r][c])] = (r,c)
 
-# make a function that travels each path on that board
-# i really want to bfs
-# let's first assume we're dealing with the first case
-
 # order does matter!
-
-#270422 too high
+# gets a sequence for the actual numpad
 def get_seq1(seq):
     seq = "A"+seq
-    #print(seq)
     ref = locs1
     out = ""
     for i in range(len(seq)-1):
@@ -116,84 +110,79 @@ def get_seq1(seq):
     return out
 
 # maybe need a third version for outermost keypad?
-def get_seq2(seq):
-    #print(seq)
-    #print(locs1["3"])
-    seq = "A"+seq
-    #print(seq)
-    ref = locs2
+# need to edit those to only handle pairs
+
+# this one will handle pairs for part 2
+def get_seq3(seq):
     out = ""
-    for i in range(len(seq)-1):
-        s = seq[i]
-        f = seq[i+1]
-        dr = ref[f][0]-ref[s][0]
-        dc = ref[f][1]-ref[s][1]
-        match s+f:
-            case 'A<':
-                out += "v<<"
-            case '<A':
-                out +=  ">>^"
-            case 'Av':
-                out += "<v"
-            case 'vA':
-                out += ">^"
-            case '^<':
-                out += "v<"
-            case '<^':
-                out += ">^"
-            case '^>':
-                out += "v>"
-            case '>^':
-                out += "<^"
-            case _:
-                if dc > 0:
-                    out += ">"*dc
-                if dr > 0:
-                    out += "v"*dr
-                if dc < 0:
-                    out += "<"*abs(dc)
-                if dr < 0:
-                    out += "^"*abs(dr)
-        out += "A"
+    ref = locs2
+    s = seq[0]
+    f = seq[1]
+    dr = ref[f][0]-ref[s][0]
+    dc = ref[f][1]-ref[s][1]
+    match s+f:
+        case 'A<':
+            out += "v<<"
+        case '<A':
+            out +=  ">>^"
+        case 'Av':
+            out += "<v"
+        case 'vA':
+            out += ">^"
+        case '^<':
+            out += "v<"
+        case '<^':
+            out += ">^"
+        case '^>':
+            out += "v>"
+        case '>^':
+            out += "<^"
+        case _:
+            if dc > 0:
+                out += ">"*dc
+            if dr > 0:
+                out += "v"*dr
+            if dc < 0:
+                out += "<"*abs(dc)
+            if dr < 0:
+                out += "^"*abs(dr)
     return out
 
-# this function may be obsolete, looks like get_seq2 works just as well
-def get_seq3(seq):
-    seq = "A"+seq
+def get_seq_outer(seq):
     ref = locs2
     out = ""
-    for i in range(len(seq)-1):
-        s = seq[i]
-        f = seq[i+1]
-        dr = ref[f][0]-ref[s][0]
-        dc = ref[f][1]-ref[s][1]
-        match s+f:
-            case 'A<':
-                out += "<v<"
-            case '<A':
-                out +=  ">^>"
-            case 'Av':
-                out += "<v"
-            case 'vA':
-                out += ">^"
-            case '^<':
-                out += "v<"
-            case '<^':
-                out += ">^"
-            case '^>':
-                out += "v>"
-            case '>^':
-                out += "<^"
-            case _:
-                if dc > 0:
-                    out += ">"*dc
-                if dr > 0:
-                    out += "v"*dr
-                if dc < 0:
-                    out += "<"*abs(dc)
-                if dr < 0:
-                    out += "^"*abs(dr)
-        out += "A"
+    
+    s = seq[0]
+    f = seq[1]
+    dr = ref[f][0]-ref[s][0]
+    dc = ref[f][1]-ref[s][1]
+    match s+f:
+        case 'A<':
+            out += "<v<"
+        case '<A':
+            out +=  ">^>"
+        case 'Av':
+            out += "<v"
+        case 'vA':
+            out += ">^"
+        case '^<':
+            out += "v<"
+        case '<^':
+            out += ">^"
+        case '^>':
+            out += "v>"
+        case '>^':
+            out += "<^"
+        case _:
+            if dc > 0:
+                out += ">"*dc
+            if dr > 0:
+                out += "v"*dr
+            if dc < 0:
+                out += "<"*abs(dc)
+            if dr < 0:
+                out += "^"*abs(dr)
+    out += "A"
     return out
 
 
@@ -214,38 +203,50 @@ def backsolve(code):
             c += dc
     return out
 
+# this should look recursive-y, as a general guideline
+#cmax = 2 for part 1, 25 for part 2 (maybe off by one error here)
+# if we add "A" here it might work
 DP = {}
-def cost(pair,chn):
-    if (pair,chn) in DP.keys():
-        return DP[pair,chn]
+
+def cost(pair,chn,cmax):
+    if (pair,chn,cmax) in DP.keys():
+        return DP[pair,chn,cmax]
     
-    add = len(
-
-# backsolving jpaul solutions to compare output
-#query = "<v<A>^>AAA<vA<A>^>AAvAA^<A>A<vA^>A<A>A<vA^>A<A>A<v<A>A^>AAA<Av>A^A"
-#query = "<AAAv<AA>>^AvA^AvA^A<vAAA^>A"
-
+    temp = "A" + get_seq3(pair) + "A"
+    tot = 0
+    if chn == 1:
+        tot = len(temp)-1
+    else:
+        for i in range(len(temp)-1):
+            tot += cost(temp[i:i+2],chn-1,cmax)
+    DP[pair,chn,cmax] = tot
+    return tot
+    
 S = S.split('\n')
 
-numpads = 12
-
 # too slow for np = 25, need to come up with a method to cache/DP this up
-for line in S:
-    a = get_seq1(line)
-    for _ in range(numpads):
-        a = get_seq2(a)
-    code = int(nums(line)[0])
-    
-    print(code)
-    print(len(a))
-    p1 += len(a)*code
-    #print('\n')
-    #a2 = backsolve(query)
-    #a1 = backsolve(a2)
-    #print(f"compiling\n{query} gives\n{a2}")
-    #print(f"compiling\n{a2} gives\n{a1}")
+# this isn't scaling... :(
+def solve(numpads):
+    ans = 0
+    for line in S:
+        # we get our initial list of inputs the old fashioned way,
+        # and hope the rest makes it fast enough
+        line = "A" + line
+        #print(line)
+        a = get_seq1(line)
+        #print(a)
+        tot = 0
+        for i in range(len(a)-1):
+            tot += cost(a[i:i+2],numpads,numpads)
+        code = int(nums(line)[0])
+        
+        #print(code)
+        #print(tot)
+        ans += tot*code
+        pass
+    return ans
 
-    pass
-
+p1 = solve(2)
+p2 = solve(25)
 print('p1 is ', p1)
-print('p2 is ', p2)
+print(p2)

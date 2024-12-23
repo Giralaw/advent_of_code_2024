@@ -72,7 +72,7 @@ def solve1(code,pads):
         d,p1,p2,out,path = heapq.heappop(Q)
         assert p2 in ['<', '>', 'v', '^', 'A']
         if out==code:
-            print(d,out,path)
+            #print(d,out,path)
             return d
         if not code.startswith(out):
             continue
@@ -270,8 +270,8 @@ for line in D.split('\n'):
     s2 = solve1(line, 25)
     PADS = 2
     # this shows us the actual string
-    slow = slowSolve(line, PADS)
-    print(slow)
+    #slow = slowSolve(line, PADS)
+    #print(slow)
     #assert len(score) == len(slow), f'{len(score)=} {len(slow)=}\n{score}\n{slow}'
     line_int = ints(line)[0]
     p1 += line_int * s1
