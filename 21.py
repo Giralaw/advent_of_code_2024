@@ -73,134 +73,178 @@ for r in range(R2):
 # order does matter!
 
 #270422 too high
-def get_seq1(seq,orig):
+def get_seq1(seq):
     seq = "A"+seq
     #print(seq)
-    if orig:
-        ref = locs1
-    else:
-        ref = locs2
+    ref = locs1
     out = ""
     for i in range(len(seq)-1):
         s = seq[i]
         f = seq[i+1]
         dr = ref[f][0]-ref[s][0]
         dc = ref[f][1]-ref[s][1]
+
+        #match s+f:
+        #    case 'A1':
+
         #print(dr,dc)
-        if ref[s][0] == 3 and dr != 0:
-            while dr < 0:
-                out += "^"
-                dr += 1
-        if ref[f][0] == 3 and dr > 1:
-            while dr > 1:
-                out += "v"
-                dr -= 1
-        if dc > 0:
-            out += ">"*dc
-        if dr > 0:
-            out += "v"*dr
-        if dc < 0:
-            out += "<"*abs(dc)
-        if dr < 0:
-            out += "^"*abs(dr)
+        if ref[s][0] == 3 and ref[f][1] == 0:
+            out += "^"
+            dr += 1
+            if dr < 0:
+                out += "^"*abs(dr)
+            if dc < 0:
+                out += "<"*abs(dc)
+        elif ref[f][0] == 3 and ref[s][1] == 0:
+            out += ">"
+            dc -= 1
+            if dc > 0:
+                out += ">"*dc
+            if dr > 0:
+                out += "v"*dr
+        else:
+            if dr > 0:
+                out += "v"*dr
+            if dc > 0:
+                out += ">"*dc
+            if dc < 0:
+                out += "<"*abs(dc)
+            if dr < 0:
+                out += "^"*abs(dr)
         out += "A"
         #print(out)
     return out
 
-# more compare
-# ref: <vA<AA>>^AvAA<^A>Av<<A>>^AvA^A<vA>^Av<<A>^A>AAvA^Av<<A>A>^AAAvA<^A>A
-# you: <vA<AA>>^AvAA<^A>Av<<A>>^AvA^A<vA>^Av<<A>^A>AAvA^Av<<A>A>^AAAvA<^A>A
-
-#980A:
-# ref: v<<A>>^AAAvA^A<vA<AA>>^AvAA<^A>Av<<A>A>^AAAvA<^A>A<vA>^A<A>A
-# you: v<<A>>^AAAvA^A<vA<AA>>^AvAA<^A>Av<<A>A>^AAAvA<^A>A<vA>^A<A>A
-
-#179A: <v<A>>^A<vA<A>>^AAvAA<^A>A<v<A>>^AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-#you:  v<<A>>^A<vA<A>>^AAvAA<^A>Av<<A>>^AAvA^A<vA>^AA<A>Av<<A>A>^AAAvA<^A>A
-
-
-#379A:
-# ref: <v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-# you: <v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<vA<A>>^AAAvA<^A>A
-
-
-#<v<A >>^A vA ^A <vA <A A >>^A A vA <^A >A A vA ^A <vA >^A A
-# (cont) <A >A <v<A >A >^A A A vA <^A >A
-
-# reduces to <A >A v<<A A > ^ A A > A v A A ^ A < v A A A > ^ A
-#             <A>A<v<AA>^AA>AvAA^A<vAAA>^A
-
-
-# reduces to ^A <<^^A >>A vvvA = 379A
-
-# and yours is...
-
-#456A:
-#cmp v<A<AA>>^AAvA^<A>AAvA^Av<A>^A<A>Av<A>^A<A>Av<A<A>>^AAvA^<A>A
-
-
-#w/  <v<A>>^AA<vA<A>>^AAvAA<^A>A<vA>^A<A>A<vA>^A<A>A<v<A>A>^AAvA<^A>A
-
-# <v<A >>^A A <vA <A >>^A A vA A <^A >A <vA >^A <A >A |<vA >^A <A >A| <v<A >A >^A| A vA <^A >A
-
-# reduces: <A A v<A A >>^A vA ^A vA ^A <vA A >^A
-# compareto<Av<AA>^A>AvA^AvA^A<vAA>^A
-
-# reduces ^^<<A >A >A vvA = 456A
-#comp to  ^<<^A>A>AvvA
-
-#ref: <v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-#you  <v<A>>^AvA^A<v<A>A<A>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
-
-def get_seq2(seq,orig,inner):
+# maybe need a third version for outermost keypad?
+def get_seq2(seq):
     #print(seq)
     #print(locs1["3"])
     seq = "A"+seq
     #print(seq)
-    if orig:
-        ref = locs1
-    else:
-        ref = locs2
+    ref = locs2
     out = ""
     for i in range(len(seq)-1):
         s = seq[i]
         f = seq[i+1]
         dr = ref[f][0]-ref[s][0]
         dc = ref[f][1]-ref[s][1]
-        if inner == False:
-            #print(f,dc,inner)
-            #print(out)
-            pass
-        if dc < 0 and not inner:
-            out += "<"
-            dc += 1
-            #print(out)
-        if dc > 0:
-            out += ">"*dc
-        if dr > 0:
-            out += "v"*dr
-        if dc < 0:
-            out += "<"*abs(dc)
-        if dr < 0:
-            out += "^"*abs(dr)
+        match s+f:
+            case 'A<':
+                out += "v<<"
+            case '<A':
+                out +=  ">>^"
+            case 'Av':
+                out += "<v"
+            case 'vA':
+                out += ">^"
+            case '^<':
+                out += "v<"
+            case '<^':
+                out += ">^"
+            case '^>':
+                out += "v>"
+            case '>^':
+                out += "<^"
+            case _:
+                if dc > 0:
+                    out += ">"*dc
+                if dr > 0:
+                    out += "v"*dr
+                if dc < 0:
+                    out += "<"*abs(dc)
+                if dr < 0:
+                    out += "^"*abs(dr)
         out += "A"
     return out
 
-S = S.split('\n')        
+# this function may be obsolete, looks like get_seq2 works just as well
+def get_seq3(seq):
+    seq = "A"+seq
+    ref = locs2
+    out = ""
+    for i in range(len(seq)-1):
+        s = seq[i]
+        f = seq[i+1]
+        dr = ref[f][0]-ref[s][0]
+        dc = ref[f][1]-ref[s][1]
+        match s+f:
+            case 'A<':
+                out += "<v<"
+            case '<A':
+                out +=  ">^>"
+            case 'Av':
+                out += "<v"
+            case 'vA':
+                out += ">^"
+            case '^<':
+                out += "v<"
+            case '<^':
+                out += ">^"
+            case '^>':
+                out += "v>"
+            case '>^':
+                out += "<^"
+            case _:
+                if dc > 0:
+                    out += ">"*dc
+                if dr > 0:
+                    out += "v"*dr
+                if dc < 0:
+                    out += "<"*abs(dc)
+                if dr < 0:
+                    out += "^"*abs(dr)
+        out += "A"
+    return out
+
+
+mvs = {"<" : (0,-1), "v" : (1,0), ">" : (0,1), "^" : (-1,0)}
+def backsolve(code):
+    # start at A
+    r,c = 0,2
+    out = ""
+    ref = locs2
+    
+    for e in code:
+        if e == "A":
+            out += G2[r][c]
+        else:
+            dr = mvs[e][0]
+            dc = mvs[e][1]
+            r += dr
+            c += dc
+    return out
+
+DP = {}
+def cost(pair,chn):
+    if (pair,chn) in DP.keys():
+        return DP[pair,chn]
+    
+    add = len(
+
+# backsolving jpaul solutions to compare output
+#query = "<v<A>^>AAA<vA<A>^>AAvAA^<A>A<vA^>A<A>A<vA^>A<A>A<v<A>A^>AAA<Av>A^A"
+#query = "<AAAv<AA>>^AvA^AvA^A<vAAA^>A"
+
+S = S.split('\n')
+
+numpads = 12
+
+# too slow for np = 25, need to come up with a method to cache/DP this up
 for line in S:
-    a = get_seq1(line,True)
-    print(line)
-    print(a)
-    inside = True
-    for _ in range(2):
-        a = get_seq2(a,False,inside)
-        inside = False
-        print(a)
+    a = get_seq1(line)
+    for _ in range(numpads):
+        a = get_seq2(a)
     code = int(nums(line)[0])
     
     print(code)
     print(len(a))
     p1 += len(a)*code
+    #print('\n')
+    #a2 = backsolve(query)
+    #a1 = backsolve(a2)
+    #print(f"compiling\n{query} gives\n{a2}")
+    #print(f"compiling\n{a2} gives\n{a1}")
+
     pass
 
 print('p1 is ', p1)
