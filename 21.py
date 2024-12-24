@@ -144,43 +144,6 @@ def get_seq3(seq):
                 out += "^"*abs(dr)
     return out
 
-def get_seq_outer(seq):
-    ref = locs2
-    out = ""
-    
-    s = seq[0]
-    f = seq[1]
-    dr = ref[f][0]-ref[s][0]
-    dc = ref[f][1]-ref[s][1]
-    match s+f:
-        case 'A<':
-            out += "v<<"
-        case '<A':
-            out +=  ">>^"
-        case 'Av':
-            out += "v<"
-        case 'vA':
-            out += "^>"
-        case '^<':
-            out += "v<"
-        case '<^':
-            out += ">^"
-        case '^>':
-            out += ">v"
-        case '>^':
-            out += "^<"
-        case _:
-            if dc > 0:
-                out += ">"*dc
-            if dr > 0:
-                out += "v"*dr
-            if dc < 0:
-                out += "<"*abs(dc)
-            if dr < 0:
-                out += "^"*abs(dr)
-    return out
-
-
 mvs = {"<" : (0,-1), "v" : (1,0), ">" : (0,1), "^" : (-1,0)}
 def backsolve(code):
     # start at A
@@ -206,10 +169,7 @@ DP = {}
 def cost(pair,chn,cmax):
     if (pair,chn,cmax) in DP.keys():
         return DP[pair,chn,cmax]
-    if chn == 2:
-        temp = "A" + get_seq3(pair) + "A"
-    else:
-        temp = "A" + get_seq3(pair) + "A"
+    temp = "A" + get_seq3(pair) + "A"
     tot = 0
     if chn == 1:
         tot = len(temp)-1
@@ -221,8 +181,6 @@ def cost(pair,chn,cmax):
     
 S = S.split('\n')
 
-# too slow for np = 25, need to come up with a method to cache/DP this up
-# this isn't scaling... :(
 def solve(numpads):
     ans = 0
     for line in S:

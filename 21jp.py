@@ -267,7 +267,7 @@ p1 = 0
 p2 = 0
 for line in D.split('\n'):
     s1 = solve1(line, 2)
-    s2 = solve1(line, 25)
+    s2 = solve1(line, 4)
     PADS = 2
     # this shows us the actual string
     #slow = slowSolve(line, PADS)
